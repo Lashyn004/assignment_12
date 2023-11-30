@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile Dashboard</title>
-    <!-- Assuming you have Vue.js and Axios included -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="style/exercise2.css">
@@ -15,17 +14,14 @@
 
     <div id="app">
         <h1>User Profile Dashboard</h1>
-        <!-- User Profile -->
         <div>
             <img src="image/2023-11-18 01.41.35.jpg" alt="" style="border-radius: 50%; width: 100px; height: 100px;">
             <h2>{{ user.name }}</h2>
             <p>Email: {{ user.email }}</p>
 
-            <!-- Conditional Rendering -->
             <p v-if="user.isAdmin">Welcome, Admin!</p>
             <p v-else>Welcome, User!</p>
         </div>
-        <!-- Edit Profile Form -->
         <form @submit.prevent="saveProfile">
             <label for="name">Name:</label>
             <input type="text" id="name" v-model="user.name" required>
@@ -41,7 +37,6 @@
 
             <button type="submit">Save Profile</button>
         </form>
-        <!-- Computed Property -->
         <p>Age: {{ userAge }}</p>
     </div>
     <script>
@@ -77,7 +72,6 @@
             },
             methods: {
                 saveProfile() {
-                    // Assume you have an API endpoint to update user data
                     axios.put('/api/user', this.user)
                         .then(response => {
                             console.log('Profile saved successfully:', response.data);
@@ -87,10 +81,8 @@
                         });
                 },
                 updateProfilePicture() {
-                    // Handle profile picture update logic if needed
                 },
                 fetchUserData() {
-                    // Assume you have an API endpoint to fetch user data
                     axios.get('/api/user')
                         .then(response => {
                             this.user = response.data;
@@ -101,7 +93,6 @@
                 },
             },
             created() {
-                // Fetch initial user data when the component is created
                 this.fetchUserData();
             },
         });
