@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Dashboard</title>
+    <!-- Assuming you have Vue.js and Axios included -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="style/exercise2.css">
+</head>
+
+<body>
+
+    <div id="app">
+        <h1>User Profile Dashboard</h1>
+        <!-- User Profile -->
+        <div>
+            <img src="image/2023-11-18 01.41.35.jpg" alt="" style="border-radius: 50%; width: 100px; height: 100px;">
+            <h2>{{ user.name }}</h2>
+            <p>Email: {{ user.email }}</p>
+
+            <!-- Conditional Rendering -->
+            <p v-if="user.isAdmin">Welcome, Admin!</p>
+            <p v-else>Welcome, User!</p>
+        </div>
+        <!-- Edit Profile Form -->
+        <form @submit.prevent="saveProfile">
+            <label for="name">Name:</label>
+            <input type="text" id="name" v-model="user.name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" v-model="user.email" required>
+
+            <label for="profilePicture">Profile Picture URL:</label>
+            <input type="text" id="profilePicture" v-model="user.profilePicture" @change="updateProfilePicture">
+
+            <label for="birthdate">Birthdate:</label>
+            <input type="date" id="birthdate" v-model="user.birthdate">
+
+            <button type="submit">Save Profile</button>
+        </form>
+        <!-- Computed Property -->
+        <p>Age: {{ userAge }}</p>
+    </div>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                user: {
+                    name: '',
+                    email: '',
+                    profilePicture: '',
+                    birthdate: '',
+                    isAdmin: false,
+                },
+            },
+            computed: {
+                userAge() {
+                    if (this.user.birthdate) {
+                        const birthdate = new Date(this.user.birthdate);
+                        const today = new Date();
+                        const age = today.getFullYear() - birthdate.getFullYear();
+                        return age;
+                    }
+                    return '';
+                },
+            },
+            watch: {
+                user: {
+                    handler(newValue, oldValue) {
+                        console.log('User details modified:', newValue);
+                    },
+                    deep: true,
+                },
+            },
+            methods: {
+                saveProfile() {
+                    // Assume you have an API endpoint to update user data
+                    axios.put('/api/user', this.user)
+                        .then(response => {
+                            console.log('Profile saved successfully:', response.data);
+                        })
+                        .catch(error => {
+                            console.error('Error saving profile:', error);
+                        });
+                },
+                updateProfilePicture() {
+                    // Handle profile picture update logic if needed
+                },
+                fetchUserData() {
+                    // Assume you have an API endpoint to fetch user data
+                    axios.get('/api/user')
+                        .then(response => {
+                            this.user = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching user data:', error);
+                        });
+                },
+            },
+            created() {
+                // Fetch initial user data when the component is created
+                this.fetchUserData();
+            },
+        });
+    </script>
+
+</body>
+
+</html>
